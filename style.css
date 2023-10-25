@@ -22,6 +22,15 @@ body {
 .display {
     background-color: aliceblue;
     flex: 2;
+    padding-left: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+#display-value{
+    flex: 0;
+    font-size: 64px;
 }
 
 .button-row {
