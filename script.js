@@ -2,7 +2,8 @@
 
 const numberButtons = document.querySelectorAll(".number-button");
 const acButton = document.querySelector("#ac-button");
-const display = document.querySelector(".display")
+const dotButton = document.querySelector("#dot-button");
+const display = document.querySelector(".display");
 const displayValue = document.querySelector("#display-value");
 
 // Global Varaibles
@@ -43,6 +44,12 @@ function updateDisplayValue(element) {
     }
 }
 
+function addDecimalPoint() {
+    if(!displayValue.textContent.includes(".")) {
+        displayValue.textContent += ".";
+    }
+}
+
 function initializeNumberButtons(buttonList) {
     buttonList.forEach((element) => element.addEventListener("click", function () { updateDisplayValue(this) }));
 }
@@ -51,11 +58,16 @@ function initializeAcButton(button) {
     button.addEventListener("click", () => displayValue.textContent = "0");
 }
 
+function initializeDotButton(button) {
+    button.addEventListener("click", addDecimalPoint);
+}
+
 // Constructing the Main Function
 
 function main() {
     initializeNumberButtons(numberButtons);
-    initializeAcButton(acButton)
+    initializeAcButton(acButton);
+    initializeDotButton(dotButton);
 }
 
 main();
