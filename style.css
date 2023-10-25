@@ -1,0 +1,40 @@
+body, html {
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+}
+
+body {
+    background-color: lightgrey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#calculator {
+    height: 500px;
+    width: 400px;
+    background-color: darkgrey;
+    display: flex;
+    flex-direction: column;
+}
+
+.display {
+    background-color: aliceblue;
+    flex: 2;
+}
+
+.button-row {
+    background-color: aqua;
+    flex: 1;
+    display: flex;
+}
+
+button {
+    flex: 1;
+}
+
+#zero-button {
+    flex-grow: 0;
+    flex-basis: 50%;
+}
