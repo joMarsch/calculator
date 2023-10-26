@@ -42,7 +42,7 @@ function operate(firstNumber, secondNumber, operator) {
     let result;
     firstNumber = +firstNumber;
     secondNumber = +secondNumber;
-    switch(operator) {
+    switch (operator) {
         case "+":
             result = add(firstNumber, secondNumber);
             break;
@@ -61,7 +61,7 @@ function operate(firstNumber, secondNumber, operator) {
     return result;
 }
 
-function updateDisplayValue(element) {
+function updateDisplayValue(number) {
     if (displayValue.textContent == "0") {
         displayValue.textContent = "";
     }
@@ -71,13 +71,13 @@ function updateDisplayValue(element) {
         isRefreshable = false;
     }
 
-    if (displayValue.offsetWidth < 9 / 10 * display.offsetWidth){
-        displayValue.textContent += element.textContent;
+    if (displayValue.offsetWidth < 9 / 10 * display.offsetWidth) {
+        displayValue.textContent += number;
     }
 }
 
 function addDecimalPoint() {
-    if(!displayValue.textContent.includes(".")) {
+    if (!displayValue.textContent.includes(".")) {
         displayValue.textContent += ".";
     }
 }
@@ -96,13 +96,16 @@ function clearVariables() {
 }
 
 function nanHandling() {
-    if(displayValue.textContent == "NaN") {
+    if (displayValue.textContent == "NaN") {
         clear();
     }
 }
 
-function operationLogic() {// TODO: Refactor for readability
-    if (isCalculating) {
+function operationLogic() {
+    if (!isCalculating) {
+        firstNumber = displayValue.textContent;
+        isCalculating = true
+    } else {
         secondNumber = displayValue.textContent;
         result = operate(firstNumber, secondNumber, operator);
 
@@ -114,21 +117,20 @@ function operationLogic() {// TODO: Refactor for readability
             isCalculating = true;
             firstNumber = displayValue.textContent;
         }
-    } else {
-        firstNumber = displayValue.textContent;
-        isCalculating = true
     }
     operator = this.textContent;
     isRefreshable = true;
 }
+
+// Button Initializers
 
 function initializeAllButtons(buttonList) {
     buttonList.forEach((element) => element.addEventListener("click", nanHandling))
 }
 
 function initializeNumberButtons(buttonList) {
-    buttonList.forEach((element) => element.addEventListener("click", function () { 
-        updateDisplayValue(this) 
+    buttonList.forEach((element) => element.addEventListener("click", function () {
+        updateDisplayValue(this.textContent);
     }));
 }
 
