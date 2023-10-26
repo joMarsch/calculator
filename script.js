@@ -5,6 +5,8 @@ const numberButtons = document.querySelectorAll(".number-button");
 const operateButtons = document.querySelectorAll(".operate-button");
 const acButton = document.querySelector("#ac-button");
 const dotButton = document.querySelector("#dot-button");
+const signflipButton = document.querySelector("#signflip-button");
+const percentButton = document.querySelector("#percent-button");
 const display = document.querySelector(".display");
 const displayValue = document.querySelector("#display-value");
 
@@ -61,6 +63,10 @@ function operate(firstNumber, secondNumber, operator) {
     return result;
 }
 
+function isDisplayUpdateable() {
+    return displayValue.offsetWidth < 9 / 10 * display.offsetWidth;
+}
+
 function updateDisplayValue(number) {
     if (displayValue.textContent == "0") {
         displayValue.textContent = "";
@@ -71,13 +77,27 @@ function updateDisplayValue(number) {
         isRefreshable = false;
     }
 
-    if (displayValue.offsetWidth < 9 / 10 * display.offsetWidth) {
+    if (isDisplayUpdateable()) {
         displayValue.textContent += number;
     }
 }
 
+
+function displayResult(result) {
+    if(+result > 99999999999 || +result < 0.000000001) {
+        result = Number.parseFloat(result).toExponential(2);
+    }
+
+    displayValue.textContent = result;
+    length = displayValue.textContent.length;
+    while(displayValue.offsetWidth > display.offsetWidth) {
+        displayValue.textContent = Number.parseFloat(displayValue.textContent).toFixed(length);
+        length--;
+    }
+}
+
 function addDecimalPoint() {
-    if (!displayValue.textContent.includes(".")) {
+    if (!displayValue.textContent.includes(".") && !isRefreshable && isDisplayUpdateable()) {
         displayValue.textContent += ".";
     }
 }
@@ -101,15 +121,29 @@ function nanHandling() {
     }
 }
 
+function flipSign() {
+    if(isDisplayUpdateable()) {
+        displayValue.textContent = -1 * +displayValue.textContent;
+    }
+}
+
+function percent() {
+    if (isDisplayUpdateable()){
+        displayValue.textContent = +displayValue.textContent / 100;
+    }
+}
+
 function operationLogic() {
     if (!isCalculating) {
-        firstNumber = displayValue.textContent;
-        isCalculating = true
+        if(this.textContent != "=") {
+            firstNumber = displayValue.textContent;
+            isCalculating = true
+        } 
     } else {
         secondNumber = displayValue.textContent;
         result = operate(firstNumber, secondNumber, operator);
 
-        displayValue.textContent = result;
+        displayResult(result);
 
         if (this.textContent == "=") {
             isCalculating = false;
@@ -146,6 +180,14 @@ function initializeOperateButtons(buttonList) {
     buttonList.forEach((element) => element.addEventListener("click", operationLogic));
 }
 
+function initializeSignflipButton(button) {
+    button.addEventListener("click", flipSign);
+}
+
+function initializePercentButton(button) {
+    button.addEventListener("click", percent)
+}
+
 // Constructing the Main Function
 
 function main() {
@@ -154,6 +196,8 @@ function main() {
     initializeOperateButtons(operateButtons);
     initializeAcButton(acButton);
     initializeDotButton(dotButton);
+    initializeSignflipButton(signflipButton);
+    initializePercentButton(percentButton);
 }
 
 main();
