@@ -72,6 +72,10 @@ function updateDisplayValue(number) {
         displayValue.textContent = "";
     }
 
+    if (displayValue.textContent == "-0") {
+        displayValue.textContent = "-";
+    }
+
     if (isRefreshable) {
         displayValue.textContent = "";
         isRefreshable = false;
@@ -84,20 +88,21 @@ function updateDisplayValue(number) {
 
 
 function displayResult(result) {
-    if(+result > 99999999999 || +result < 0.000000001) {
+    if (+result > 99999999999 || (+result < 0.000000001 && +result > 0)
+        || +result < -9999999999 || (+result < 0 && +result > -0.00000001)) {
         result = Number.parseFloat(result).toExponential(2);
     }
 
     displayValue.textContent = result;
     length = displayValue.textContent.length;
-    while(displayValue.offsetWidth > display.offsetWidth) {
+    while (displayValue.offsetWidth > display.offsetWidth) {
         displayValue.textContent = Number.parseFloat(displayValue.textContent).toFixed(length);
         length--;
     }
 }
 
 function addDecimalPoint() {
-    if (!displayValue.textContent.includes(".") && !isRefreshable && isDisplayUpdateable()) {
+    if (!displayValue.textContent.includes(".") && isDisplayUpdateable()) {
         displayValue.textContent += ".";
     }
 }
@@ -122,23 +127,30 @@ function nanHandling() {
 }
 
 function flipSign() {
-    if(isDisplayUpdateable()) {
-        displayValue.textContent = -1 * +displayValue.textContent;
+    if (displayValue.textContent.charAt(0) == "-") {
+        displayValue.textContent = displayValue.textContent.slice(1);
+    } else {
+        if (isDisplayUpdateable()) {
+            displayValue.textContent = "-" + displayValue.textContent;
+        }
     }
+
+
+    
 }
 
 function percent() {
-    if (isDisplayUpdateable()){
+    if (isDisplayUpdateable()) {
         displayValue.textContent = +displayValue.textContent / 100;
     }
 }
 
 function operationLogic() {
     if (!isCalculating) {
-        if(this.textContent != "=") {
+        if (this.textContent != "=") {
             firstNumber = displayValue.textContent;
             isCalculating = true
-        } 
+        }
     } else {
         secondNumber = displayValue.textContent;
         result = operate(firstNumber, secondNumber, operator);
